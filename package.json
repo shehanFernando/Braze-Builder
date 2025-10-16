@@ -9,6 +9,9 @@
     "test": "jest",
     "lint": "next lint"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "next": "^14.0.0",
     "react": "^18.0.0",
