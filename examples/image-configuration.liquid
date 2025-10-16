@@ -1,0 +1,206 @@
+{% comment %}
+  C13 Image Configuration Component - Liquid Template for Braze
+  Supports 1-up, 2-up, and 3-up image layouts with padding options and responsive behavior
+  
+  Required Variables:
+  - image_layout: "1up", "2up", "3up" (default: "1up")
+  - image_padding: true/false for padding around images (default: true)
+  - image_mobile_behavior: "stacked", "scaled" (default: "stacked")
+  - image_bg_color: background color (default: "transparent")
+  - image_padding_top: top padding in px (default: 32)
+  - image_padding_btm: bottom padding in px (default: 32)
+  - image_padding_top_m: mobile top padding in px (default: 24)
+  - image_padding_btm_m: mobile bottom padding in px (default: 24)
+  - image_hide_mobile: true/false to hide on mobile
+  - image_hide_desktop: true/false to hide on desktop
+  - image_1_src: image 1 URL (required)
+  - image_1_alt: image 1 alt text (default: "Lifestyle Image")
+  - image_1_link: image 1 link URL (optional)
+  - image_1_aria_label: image 1 aria label (optional)
+  - image_2_src: image 2 URL (for 2up/3up)
+  - image_2_alt: image 2 alt text (default: "Lifestyle Image")
+  - image_2_link: image 2 link URL (optional)
+  - image_2_aria_label: image 2 aria label (optional)
+  - image_3_src: image 3 URL (for 3up)
+  - image_3_alt: image 3 alt text (default: "Lifestyle Image")
+  - image_3_link: image 3 link URL (optional)
+  - image_3_aria_label: image 3 aria label (optional)
+{% endcomment %}
+
+{% comment %} Variable Defaults {% endcomment %}
+{% assign image_layout = image_layout | default: "1up" %}
+{% assign image_padding = image_padding | default: true %}
+{% assign image_mobile_behavior = image_mobile_behavior | default: "stacked" %}
+{% assign image_bg_color = image_bg_color | default: "transparent" %}
+{% assign image_padding_top = image_padding_top | default: 32 %}
+{% assign image_padding_btm = image_padding_btm | default: 32 %}
+{% assign image_padding_top_m = image_padding_top_m | default: 24 %}
+{% assign image_padding_btm_m = image_padding_btm_m | default: 24 %}
+{% assign image_1_alt = image_1_alt | default: "Lifestyle Image" %}
+{% assign image_2_alt = image_2_alt | default: "Lifestyle Image" %}
+{% assign image_3_alt = image_3_alt | default: "Lifestyle Image" %}
+{% assign image_1_aria_label = image_1_aria_label | default: "describe where user will be landing" %}
+{% assign image_2_aria_label = image_2_aria_label | default: "describe where user will be landing" %}
+{% assign image_3_aria_label = image_3_aria_label | default: "describe where user will be landing" %}
+
+{% comment %} Layout-specific Settings {% endcomment %}
+{% if image_layout == "1up" %}
+  {% if image_padding %}
+    {% assign container_width = "92%" %}
+    {% assign container_max_width = "552px" %}
+    {% assign image_width = "552" %}
+  {% else %}
+    {% assign container_width = "100%" %}
+    {% assign container_max_width = "600px" %}
+    {% assign image_width = "600" %}
+  {% endif %}
+{% elsif image_layout == "2up" %}
+  {% assign container_width = "92%" %}
+  {% assign container_max_width = "552px" %}
+  {% assign image_width = "268" %}
+{% elsif image_layout == "3up" %}
+  {% assign container_width = "92%" %}
+  {% assign container_max_width = "552px" %}
+  {% assign image_width = "173" %}
+{% endif %}
+
+{% comment %} Mobile Classes {% endcomment %}
+{% if image_mobile_behavior == "stacked" %}
+  {% if image_layout == "2up" %}
+    {% assign mobile_class_1 = "block width100p" %}
+    {% assign mobile_class_2 = "block width100p" %}
+    {% assign spacer_class = "block width100p" %}
+  {% elsif image_layout == "3up" %}
+    {% assign mobile_class_1 = "block width100p" %}
+    {% assign mobile_class_2 = "block width100p" %}
+    {% assign mobile_class_3 = "block width100p" %}
+    {% assign spacer_class = "block width100p" %}
+  {% endif %}
+{% else %}
+  {% if image_layout == "2up" %}
+    {% assign mobile_class_1 = "width49p" %}
+    {% assign mobile_class_2 = "width49p" %}
+    {% assign spacer_class = "width2p" %}
+  {% elsif image_layout == "3up" %}
+    {% assign mobile_class_1 = "width33p" %}
+    {% assign mobile_class_2 = "width33p" %}
+    {% assign mobile_class_3 = "width33p" %}
+    {% assign spacer_class = "width2p" %}
+  {% endif %}
+{% endif %}
+
+{% comment %} Desktop/Mobile Show/Hide Logic {% endcomment %}
+{% if image_hide_desktop == true %}
+<!--[if !mso]><!-->
+<div class="mobile-content" style="display: none;">
+{% elsif image_hide_mobile == true %}
+<div class="desktop-content">
+{% endif %}
+
+{% comment %} Main Image Configuration Container {% endcomment %}
+{% if image_1_src %}
+<table cellspacing="0" cellpadding="0" border="0" role="presentation" bgcolor="{{ image_bg_color }}" style="width: 100%; max-width: 600px;">
+  <tr>
+    <td align="center">
+      {% if image_layout == "1up" %}
+        {% comment %} 1UP Layout {% endcomment %}
+        {% if image_padding %}
+          <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" class="width90p" style="width: {{ container_width }}; max-width: {{ container_max_width }};">
+            <tr>
+              <td class="padding24px0px" style="padding-top: {{ image_padding_top }}px; padding-bottom: {{ image_padding_btm }}px; font-size: 0px;">
+                {% if image_1_link %}<a href="{{ image_1_link }}" aria-label="{{ image_1_aria_label }}" class="yblock">{% endif %}
+                <img border="0" align="center" class="inlineblock" src="{{ image_1_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_1_alt }}">
+                {% if image_1_link %}</a>{% endif %}
+              </td>
+            </tr>
+          </table>
+        {% else %}
+          <table cellspacing="0" cellpadding="0" border="0" role="presentation" bgcolor="{{ image_bg_color }}" style="width: 100%; max-width: 600px;">
+            <tr>
+              <td align="center" style="font-size: 0px;">
+                {% if image_1_link %}<a href="{{ image_1_link }}" aria-label="{{ image_1_aria_label }}" class="yblock">{% endif %}
+                <img border="0" align="center" class="inlineblock" src="{{ image_1_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_1_alt }}">
+                {% if image_1_link %}</a>{% endif %}
+              </td>
+            </tr>
+          </table>
+        {% endif %}
+        
+      {% elsif image_layout == "2up" %}
+        {% comment %} 2UP Layout {% endcomment %}
+        <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" class="width90p" style="width: {{ container_width }}; max-width: {{ container_max_width }};">
+          <tr>
+            <td align="center" style="padding-top: {{ image_padding_top }}px; padding-bottom: {{ image_padding_btm }}px; font-size: 0px;" class="padding24px0px">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" align="center">
+                <tr>
+                  <td class="{{ mobile_class_1 }}" style="width: {{ image_width }}px; font-size: 0px;">
+                    {% if image_1_link %}<a href="{{ image_1_link }}" aria-label="{{ image_1_aria_label }}" class="yblock">{% endif %}
+                    <img border="0" align="center" class="inlineblock" src="{{ image_1_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_1_alt }}">
+                    {% if image_1_link %}</a>{% endif %}
+                  </td>
+                  <td class="{{ spacer_class }}" aria-hidden="true" height="16" width="16" style="height: 16px; width: 16px; font-size: 16px; mso-line-height-rule: exactly; line-height: 16px;">
+                    &nbsp;
+                  </td>
+                  {% if image_2_src %}
+                  <td class="{{ mobile_class_2 }}" style="width: {{ image_width }}px; font-size: 0px;">
+                    {% if image_2_link %}<a href="{{ image_2_link }}" aria-label="{{ image_2_aria_label }}" class="yblock">{% endif %}
+                    <img border="0" align="center" class="inlineblock" src="{{ image_2_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_2_alt }}">
+                    {% if image_2_link %}</a>{% endif %}
+                  </td>
+                  {% endif %}
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        
+      {% elsif image_layout == "3up" %}
+        {% comment %} 3UP Layout {% endcomment %}
+        <table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" class="width90p" style="width: {{ container_width }}; max-width: {{ container_max_width }};">
+          <tr>
+            <td align="center" style="padding-top: {{ image_padding_top }}px; padding-bottom: {{ image_padding_btm }}px; font-size: 0px;" class="padding24px0px">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" align="center">
+                <tr>
+                  <td align="center" class="{{ mobile_class_1 }}" style="width: {{ image_width }}px;">
+                    {% if image_1_link %}<a href="{{ image_1_link }}" aria-label="{{ image_1_aria_label }}" class="yblock">{% endif %}
+                    <img border="0" align="center" class="inlineblock" src="{{ image_1_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_1_alt }}">
+                    {% if image_1_link %}</a>{% endif %}
+                  </td>
+                  <td class="{{ spacer_class }}" aria-hidden="true" height="16" width="16" style="height: 16px; width: 16px; font-size: 16px; mso-line-height-rule: exactly; line-height: 16px;">
+                    &nbsp;
+                  </td>
+                  {% if image_2_src %}
+                  <td align="center" class="{{ mobile_class_2 }}" style="width: {{ image_width }}px;">
+                    {% if image_2_link %}<a href="{{ image_2_link }}" aria-label="{{ image_2_aria_label }}" class="yblock">{% endif %}
+                    <img border="0" align="center" class="inlineblock" src="{{ image_2_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_2_alt }}">
+                    {% if image_2_link %}</a>{% endif %}
+                  </td>
+                  <td class="{{ spacer_class }}" aria-hidden="true" height="16" width="16" style="height: 16px; width: 16px; font-size: 16px; mso-line-height-rule: exactly; line-height: 16px;">
+                    &nbsp;
+                  </td>
+                  {% endif %}
+                  {% if image_3_src %}
+                  <td align="center" class="{{ mobile_class_3 }}" style="width: {{ image_width }}px;">
+                    {% if image_3_link %}<a href="{{ image_3_link }}" aria-label="{{ image_3_aria_label }}" class="yblock">{% endif %}
+                    <img border="0" align="center" class="inlineblock" src="{{ image_3_src }}" style="width: 100%; display: block; font-family: AudibleSansRg, Arial, sans-serif; font-size: 11px;" width="{{ image_width }}" alt="{{ image_3_alt }}">
+                    {% if image_3_link %}</a>{% endif %}
+                  </td>
+                  {% endif %}
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+{% endif %}
+
+{% comment %} Close Desktop/Mobile Show/Hide Divs {% endcomment %}
+{% if image_hide_desktop == true %}
+</div>
+<!--<![endif]-->
+{% elsif image_hide_mobile == true %}
+</div>
+{% endif %}
