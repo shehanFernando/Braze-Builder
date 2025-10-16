@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Block } from '@/types';
 import { useEditor } from '@/context/EditorContext';
@@ -14,6 +14,9 @@ interface BlockRendererProps {
 
 export default function BlockRenderer({ block, index, onSelect, isSelected }: BlockRendererProps) {
   const { dispatch } = useEditor();
+  
+  // Create a ref for the component
+  const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'sortable-block',
@@ -35,6 +38,9 @@ export default function BlockRenderer({ block, index, onSelect, isSelected }: Bl
       }
     },
   }));
+
+  // Attach both drag and drop refs to the same element
+  drag(drop(ref));
 
   const renderBlockContent = () => {
     switch (block.type) {
@@ -274,7 +280,7 @@ export default function BlockRenderer({ block, index, onSelect, isSelected }: Bl
 
   return (
     <div
-      ref={(node) => drag(drop(node))}
+      ref={ref}
       onClick={onSelect}
       className={`relative group cursor-pointer ${
         isSelected ? 'ring-2 ring-blue-500' : ''
