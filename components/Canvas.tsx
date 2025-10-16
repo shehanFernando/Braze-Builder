@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { useEditor } from '@/context/EditorContext';
 import { Block, BlockTemplate, DragItem } from '@/types';
@@ -12,6 +12,7 @@ interface CanvasProps {
 
 export default function Canvas({ templates }: CanvasProps) {
   const { state, dispatch } = useEditor();
+  const ref = useRef<HTMLDivElement>(null);
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'block',
@@ -30,9 +31,12 @@ export default function Canvas({ templates }: CanvasProps) {
     }),
   }), [templates]);
 
+  // Connect the drop target to the ref
+  drop(ref);
+
   return (
     <div
-      ref={drop}
+      ref={ref}
       className={`flex-1 p-4 min-h-screen ${
         isOver ? 'bg-blue-50' : 'bg-white'
       }`}
