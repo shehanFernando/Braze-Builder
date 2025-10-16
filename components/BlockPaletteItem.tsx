@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { ConnectDragSource, useDrag } from 'react-dnd';
+import React, { useRef } from 'react';
+import { useDrag } from 'react-dnd';
 import { BlockTemplate } from '@/types';
 
 interface BlockPaletteItemProps {
@@ -17,9 +17,13 @@ export default function BlockPaletteItem({ template }: BlockPaletteItemProps) {
     }),
   }));
 
+  // Create a ref for the draggable element and connect the drag source to it.
+  const ref = useRef<HTMLDivElement>(null);
+  drag(ref);
+
   return (
     <div
-      ref={drag}
+      ref={ref}
       className={`p-3 mb-2 bg-white border rounded cursor-move hover:bg-gray-50 ${
         isDragging ? 'opacity-50' : ''
       }`}
