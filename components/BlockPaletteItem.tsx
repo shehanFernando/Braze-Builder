@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ConnectDragSource, useDrag } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 import { BlockTemplate } from '@/types';
 
 interface BlockPaletteItemProps {
@@ -9,7 +9,7 @@ interface BlockPaletteItemProps {
 }
 
 export default function BlockPaletteItem({ template }: BlockPaletteItemProps) {
-  const [{ isDragging }, drag]: [{ isDragging: boolean }, ConnectDragSource] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: 'block',
     item: { blockType: template.type },
     collect: (monitor) => ({
