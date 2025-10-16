@@ -11,7 +11,7 @@ import { BlockTemplate } from '@/types';
  */
 function extractDefaultProps(template: string): Record<string, any> {
   const defaultProps: Record<string, any> = {};
-  const regex = /\{%\s*assign\s+([\w_]+)\s*=\s*.*\|\s*default:\s*'"['"]\s*%\}/g;
+  const regex = /\{%\s*assign\s+([\w_]+)\s*=\s*.*?\|\s*default:\s*['"](.*?)['"]\s*%\}/g;
   let match;
   while ((match = regex.exec(template)) !== null) {
     const [, key, value] = match;
