@@ -9,7 +9,7 @@ interface BlockPaletteItemProps {
 }
 
 export default function BlockPaletteItem({ template }: BlockPaletteItemProps) {
-  const [{ isDragging }, drag]: [{ isDragging: boolean }, ConnectDragSource] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: 'block',
     item: { blockType: template.type },
     collect: (monitor) => ({
