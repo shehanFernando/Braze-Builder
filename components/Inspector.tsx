@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import { useEditor } from '@/context/EditorContext';
 
 export default function Inspector() {
@@ -27,55 +27,72 @@ export default function Inspector() {
     });
   };
 
-  const renderPropEditor = (key: string, value: any) => {
-    const commonInputClass = "w-full p-2 border rounded text-sm";
-    
-    switch (key) {
-      case 'textAlign':
-        return (
-          <select
-            value={value}
-            onChange={(e) => updateBlockProp(key, e.target.value)}
-            className={commonInputClass}
-          >
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-            <option value="right">Right</option>
-          </select>
-        );
-      
-      case 'content':
-        return (
-          <textarea
-            value={value}
-            onChange={(e) => updateBlockProp(key, e.target.value)}
-            className={`${commonInputClass} h-20`}
-            placeholder="Enter text content"
-          />
-        );
-      
-      case 'backgroundColor':
-      case 'color':
-        return (
-          <input
-            type="color"
-            value={value}
-            onChange={(e) => updateBlockProp(key, e.target.value)}
-            className="w-full h-10 border rounded"
-          />
-        );
-      
-      default:
-        return (
-          <input
-            type="text"
-            value={value}
-            onChange={(e) => updateBlockProp(key, e.target.value)}
-            className={commonInputClass}
-            placeholder={`Enter ${key}`}
-          />
-        );
+  // --- Prop Editor Components ---
+  const commonInputClass = "w-full p-2 border rounded text-sm";
+
+  interface PropEditorProps {
+    propKey: string;
+    value: any;
+    onChange: (key: string, value: string | number | boolean) => void;
+  }
+
+  const TextInput: FC<PropEditorProps> = ({ propKey, value, onChange }) => (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(propKey, e.target.value)}
+      className={commonInputClass}
+      placeholder={`Enter ${propKey}`}
+    />
+  );
+
+  const TextAreaInput: FC<PropEditorProps> = ({ propKey, value, onChange }) => (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(propKey, e.target.value)}
+      className={`${commonInputClass} h-20`}
+      placeholder="Enter text content"
+    />
+  );
+
+  const ColorInput: FC<PropEditorProps> = ({ propKey, value, onChange }) => (
+    <input
+      type="color"
+      value={value}
+      onChange={(e) => onChange(propKey, e.target.value)}
+      className="w-full h-10 border rounded"
+    />
+  );
+
+  const SelectInput: FC<PropEditorProps & { options: {label: string, value: string}[] }> = ({ propKey, value, onChange, options }) => (
+     <select
+      value={value}
+      onChange={(e) => onChange(propKey, e.target.value)}
+      className={commonInputClass}
+    >
+      {options.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+    </select>
+  );
+
+  // --- Prop to Component Mapping ---
+  const getPropEditor = (key: string, value: any) => {
+    const editorProps = { propKey: key, value, onChange: updateBlockProp };
+
+    if (key.toLowerCase().includes('color')) {
+      return <ColorInput {...editorProps} />;
     }
+    if (key === 'textAlign') {
+      return <SelectInput {...editorProps} options={[
+        { value: 'left', label: 'Left' },
+        { value: 'center', label: 'Center' },
+        { value: 'right', label: 'Right' },
+      ]} />;
+    }
+    if (key === 'content' || key.length > 50) { // Example heuristic for textareas
+      return <TextAreaInput {...editorProps} />;
+    }
+    // Default to text input
+    return <TextInput {...editorProps} />;
   };
 
   return (
@@ -92,7 +109,7 @@ export default function Inspector() {
             <label className="block text-sm font-medium mb-1">
               {key.charAt(0).toUpperCase() + key.slice(1)}
             </label>
-            {renderPropEditor(key, value)}
+            {getPropEditor(key, value)}
           </div>
         ))}
       </div>
