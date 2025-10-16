@@ -8,7 +8,7 @@ interface BlockPaletteItemProps {
   template: BlockTemplate;
 }
 
-export default function BlockPalette({ template }: BlockPaletteItemProps) {
+export default function BlockPaletteItem({ template }: BlockPaletteItemProps) {
   const [{ isDragging }, drag]: [{ isDragging: boolean }, ConnectDragSource] = useDrag(() => ({
     type: 'block',
     item: { blockType: template.type },
