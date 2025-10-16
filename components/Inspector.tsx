@@ -17,7 +17,7 @@ export default function Inspector() {
     );
   }
 
-  const updateBlockProp = (key: string, value: string) => {
+  const updateBlockProp = (key: string, value: string | number | boolean) => {
     dispatch({
       type: 'UPDATE_BLOCK',
       payload: {
