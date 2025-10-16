@@ -43,7 +43,7 @@ export default function Home() {
           <Toolbar />
           <div className="flex flex-1">
             <BlockPalette templates={templates} />
-            <Canvas />
+            <Canvas templates={templates} />
             <Inspector />
           </div>
         </div>

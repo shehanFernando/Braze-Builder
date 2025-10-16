@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useEditor } from '@/context/EditorContext';
-import { renderEmailToLiquid } from '@/utils/liquidRenderer';
+import { renderEmailToLiquid } from '@/utils/liquidProcessor';
 
 export default function Toolbar() {
   const { state, dispatch } = useEditor();
