@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { EditorProvider } from '@/context/EditorContext';
-import { BlockTemplate } from '@/types';
+import type { BlockTemplate } from '@/types';
 import BlockPalette from '@/components/BlockPalette';
 import Canvas from '@/components/Canvas';
 import Inspector from '@/components/Inspector';
